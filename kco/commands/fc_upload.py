@@ -17,6 +17,14 @@ def get_unique_url(unique_urls, base_url, name):
         counter = counter + 1
     return gs_url
 
+def upload_to_google_bucket(source, dest, dry_run = False):
+    print('Uploading ' + source + ' to ' + dest)
+    if not dry_run:
+        if os.path.isdir(source):
+            subprocess.check_call(['gsutil', '-m', 'rsync', '-r', source, dest])
+        else:
+            subprocess.check_call(['gsutil', '-m', 'cp', '-r', source, dest])
+
 
 search_inside_file_whitelist = set(['txt', 'xlsx', 'tsv', 'csv'])
 
@@ -60,10 +68,7 @@ def do_fc_upload(inputs, workspace, dry_run, bucket_folder):
                                 sub_gs_url = get_unique_url(unique_urls, 'gs://' + bucket + '/', os.path.basename(os.path.abspath(values[i])))
                                 unique_urls.add(sub_gs_url)                                                        
                                 input_file_to_output_gsurl[values[i]] = sub_gs_url
-                                print('Uploading ' + str(values[i]) + ' to ' + sub_gs_url)
-                                if not dry_run:
-                                    subprocess.check_call(
-                                        ['gsutil', '-m', 'cp', '-r', str(values[i]), sub_gs_url])
+                                upload_to_google_bucket(values[i], sub_gs_url, dry_run)
                             values[i] = sub_gs_url
                             changed_file_contents = True
                     df[c] = values
@@ -73,9 +78,7 @@ def do_fc_upload(inputs, workspace, dry_run, bucket_folder):
                 print('Rewriting file paths in ' + original_path + ' to ' + input_path)
                 out_sep = ',' if input_path_extension == 'csv' else '\t'
                 df.to_csv(input_path, sep=out_sep, index=False, header=False)
-            print('Uploading ' + input_path + ' to ' + input_gs_url)
-            if not dry_run:
-                subprocess.check_call(['gsutil', '-m', 'cp', input_path, input_gs_url])
+            upload_to_google_bucket(input_path, input_gs_url, dry_run)
             inputs[k] = input_gs_url
             if changed_file_contents:
                 os.remove(input_path)
