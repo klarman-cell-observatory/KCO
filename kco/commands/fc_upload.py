@@ -54,6 +54,7 @@ def do_fc_upload(inputs, workspace, dry_run, bucket_folder):
                     values = df[c].values
                     for i in range(len(values)):
                         if isinstance(values[i], str) and os.path.exists(values[i]):
+                            values[i] = os.path.abspath(values[i])
                             sub_gs_url = input_file_to_output_gsurl.get(values[i], None)
                             if sub_gs_url is None:
                                 sub_gs_url = get_unique_url(unique_urls, 'gs://' + bucket + '/', os.path.basename(os.path.abspath(values[i])))
