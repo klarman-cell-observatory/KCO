@@ -520,6 +520,70 @@ cluster outputs
 	  - File
 	  - Outputted PARQUET file that contains metadata and expression levels for every gene
 
+
+
+YANAY
+
+**output_h5ad**
+
+[Example h5ad file](https://drive.google.com/file/d/1B_MBs7APvqAZCSribiuSOigokx-nHHe_/view?usp=sharing)
+
+**Load the h5ad file:**
+
+
+	>>>import scCloud
+	
+	>>>adata = scCloud.tools.read_input('sample.h5ad', mode = 'a')
+	
+**Inspect the actual AnnData object**
+	**>>> adata**
+	
+	AnnData object with n_obs × n_vars = 944 × 16079 (Cells x Genes)		
+	obs: 'Channel', 'n_genes', 'n_counts', 'percent_mito', 'approx_louvain_labels', 'kmeans_labels', 'louvain_labels'
+	var: 'gene_ids', 'n_cells', 'percent_cells', 'robust', 'selected'
+	uns: 'W', 'W_diffmap', 'W_diffmap_norm', 'W_norm', 'diffmap_evals', 'genome'
+	obsm: 'X_pca', 'X_diffmap', 'X_diffmap_sym', 'X_diffmap_pca', 'X_tsne', 'X_fitsne', 'X_umap', 'X_umap_diffmap', 	'X_fle'
+
+**Inner matrix of cells and their cluster labels**
+	**>>>data.obs # Cluster Matrix** 
+					  Channel  n_genes  n_counts  percent_mito approx_louvain_labels kmeans_labels louvain_labels
+	index                                                                                                                        
+	neurons_900-AAACCTGGTCTCGTTC  neurons_900     3073    9419.0           0.0                     4             5              5
+	neurons_900-AAACGGGAGCCACGTC  neurons_900     2284    5717.0           0.0                     5             7              4
+
+**Gene information**
+	**>>>data.var # Gene info**
+				  gene_ids  n_cells  percent_cells  robust  selected
+	index                                                                       
+	Xkr4            ENSMUSG00000051951        6       0.006356    True     False
+	Rp1             ENSMUSG00000025900        1       0.001059    True     False
+
+
+**Diffmap values**
+	**>>>data.uns # Dictionary of diffmap values**
+
+	OrderedDict([('W', <944x944 sparse matrix of type '<class 'numpy.float32'>'
+	with 141876 stored elements in Compressed Sparse Row format>), ('W_diffmap', <944x944 sparse matrix of type '<class 'numpy.float32'>'
+	with 116848 stored elements in Compressed Sparse Row format>), ('W_diffmap_norm', <944x944 sparse matrix of type '<class 'numpy.float32'>'
+	with 116848 stored elements in Compressed Sparse Row format>), ('W_norm', <944x944 sparse matrix of type '<class 'numpy.float32'>'
+	with 141876 stored elements in Compressed Sparse Row format>), ('diffmap_evals', array([0.9155279 , 0.77575266, 0.7318401 , 0.64490014, 0.6218003 ,
+	0.5308283 , 0.4915211 , 0.47392544, 0.44838962, 0.423986  ,
+	0.409557  , 0.36157846, 0.32850975, 0.31498533, 0.29044932,
+	0.27578905, 0.26873466, 0.26618922, 0.25573307, 0.24135771,
+	0.23871434, 0.21574813, 0.21242426, 0.19944046, 0.19741325,
+	0.1854162 , 0.17718865, 0.1747676 , 0.15623066, 0.15121964,
+	0.15055016, 0.14845237, 0.1448731 , 0.1423879 , 0.13717665,
+	0.13559413, 0.13521759, 0.1282553 , 0.12585732, 0.1246139 ,
+	0.12269496, 0.12071244, 0.11843422, 0.11817639, 0.11592152,
+	0.11393373, 0.11209305, 0.11079415, 0.1096389 ], dtype=float32)), ('genome', 'mm10')])
+
+**Embeddings**
+	**>>>obsm # Arrays of Embeddings**
+	'X_pca', 'X_diffmap', 'X_diffmap_sym', 'X_diffmap_pca', 'X_tsne', 'X_fitsne', 'X_umap', 'X_umap_diffmap', 'X_fle'
+	… numbers …
+	
+
+
 ---------------------------------
 
 de_analysis
